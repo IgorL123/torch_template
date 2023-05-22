@@ -1,4 +1,5 @@
 import torch
+from sklearn.metrics import roc_auc_score
 
 
 def accuracy(output, target):
@@ -18,3 +19,11 @@ def top_k_acc(output, target, k=3):
         for i in range(k):
             correct += torch.sum(pred[:, i] == target).item()
     return correct / len(target)
+
+
+def roc_auc(output, target):
+    with torch.no_grad():
+        pred = torch.sigmoid(output)
+        pred = pred.cpu().numpy()
+        pred = pred.reshape(-1)
+    return roc_auc_score(target, pred)
